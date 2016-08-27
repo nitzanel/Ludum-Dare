@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// TASK TASK TASK
+/// </summary>
+
 [System.Serializable]
 public class Task
 {
@@ -12,9 +16,16 @@ public class Task
         destination = Destination;
     }
 }
+/// <summary>
+/// END END END
+/// </summary>
 
 public class Mummy : MonoBehaviour
 {
+    public bool isSelected = false;
+
+    public Transform marker = null;
+
     public float speed = 0.5f;
     public Platform platform = null;
     private Platform nextPlatform = null;
@@ -31,11 +42,23 @@ public class Mummy : MonoBehaviour
 	
 	void Update ()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && isSelected)
         {
             AddTask(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, transform.position.z)));
         }
 	}
+
+    public void OnMouseDown()
+    {
+        if (Input.GetKey("mouse 0"))
+        {
+            isSelected = !isSelected;
+            if (isSelected)
+                transform.GetComponent<SpriteRenderer>().color = Color.yellow;
+            else
+                transform.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
 
     public void ChangeDirection()
     {
@@ -64,6 +87,7 @@ public class Mummy : MonoBehaviour
                 float halfHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
                 Task t = tasks.Dequeue();
                 Vector3 destination = NormalizeDestination(t.destination);
+                if (marker) marker.position = new Vector3(destination.x, destination.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2, 0);
                 SetPlatforms(false, true);
                 //Debug.Log(originalPosition.ToString() + "  ->  " + destination.ToString());
                 while (Mathf.Abs(transform.position.x - destination.x) > 0.01 || Mathf.Abs(transform.position.y - halfHeight - destination.y) > 0.01)
@@ -71,6 +95,7 @@ public class Mummy : MonoBehaviour
                     transform.position = Navigate(destination);
                     yield return null;
                 }
+                marker.position = new Vector3(100, 0, 0);
                 //Debug.Log("Arrived");
                 if (speed != prevSpeed) ChangeDirection();
 
@@ -255,10 +280,10 @@ public class Mummy : MonoBehaviour
             if (destination.y - o.transform.position.y < 0.5 && destination.y - o.transform.position.y >= 0)
             {
                 float xVal;
-                if (destination.x < o.transform.position.x - o.GetComponent<SpriteRenderer>().bounds.size.x / 2 + transform.GetComponent<SpriteRenderer>().bounds.size.x / 2)
-                    xVal = o.transform.position.x - o.GetComponent<SpriteRenderer>().bounds.size.x / 2 + transform.GetComponent<SpriteRenderer>().bounds.size.x / 2;
-                else if (destination.x > o.transform.position.x + o.GetComponent<SpriteRenderer>().bounds.size.x / 2 - transform.GetComponent<SpriteRenderer>().bounds.size.x / 2)
-                    xVal = o.transform.position.x + o.GetComponent<SpriteRenderer>().bounds.size.x / 2 - transform.GetComponent<SpriteRenderer>().bounds.size.x / 2;
+                if (destination.x < o.transform.position.x - o.GetComponent<SpriteRenderer>().bounds.size.x / 2 + transform.GetComponent<SpriteRenderer>().bounds.size.x)
+                    xVal = o.transform.position.x - o.GetComponent<SpriteRenderer>().bounds.size.x / 2 + transform.GetComponent<SpriteRenderer>().bounds.size.x;
+                else if (destination.x > o.transform.position.x + o.GetComponent<SpriteRenderer>().bounds.size.x / 2 - transform.GetComponent<SpriteRenderer>().bounds.size.x)
+                    xVal = o.transform.position.x + o.GetComponent<SpriteRenderer>().bounds.size.x / 2 - transform.GetComponent<SpriteRenderer>().bounds.size.x;
                 else
                     xVal = destination.x;
 
