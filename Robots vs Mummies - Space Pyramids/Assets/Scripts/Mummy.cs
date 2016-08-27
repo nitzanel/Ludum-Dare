@@ -5,15 +5,19 @@ using System.Collections.Generic;
 /// <summary>
 /// TASK TASK TASK
 /// </summary>
-
 [System.Serializable]
 public class Task
 {
     public Vector3 destination;
+    public enum action { WALK, FURNACE, WOOD };
+    public action a;
+    public Interactable calledMe;
 
-    public Task(Vector3 Destination)
+    public Task(Vector3 Destination, action A = action.WALK, Interactable CalledMe = null)
     {
         destination = Destination;
+        a = A;
+        calledMe = CalledMe;
     }
 }
 /// <summary>
@@ -31,11 +35,13 @@ public class Mummy : MonoBehaviour
     private Platform nextPlatform = null;
 
     private Queue<Task> tasks;
+    private List<Item> inventory;
     private bool onLadder = false;
 
 	void Start ()
     {
         tasks = new Queue<Task>();
+        inventory = new List<Item>();
 
         StartCoroutine("TaskManager");
 	}
@@ -67,9 +73,9 @@ public class Mummy : MonoBehaviour
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
-    public void AddTask(Vector3 destination)
+    public void AddTask(Vector3 destination, Task.action action = Task.action.WALK, Interactable calledMe = null)
     {
-        tasks.Enqueue(new Task(destination));
+        tasks.Enqueue(new Task(destination, action, calledMe));
     }
 
     IEnumerator TaskManager()
@@ -78,9 +84,8 @@ public class Mummy : MonoBehaviour
         {
             if (tasks.Count > 0)
             {
-                //Rigidbody2D r = transform.GetComponent<Rigidbody2D>();
+                //Move to task:
                 BoxCollider2D c = transform.GetComponent<BoxCollider2D>();
-                //r.gravityScale = 0;
                 c.enabled = false;
 
                 float prevSpeed = speed;
@@ -90,18 +95,43 @@ public class Mummy : MonoBehaviour
                 Vector3 destination = NormalizeDestination(t.destination);
                 if (marker) marker.position = new Vector3(destination.x, destination.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2, 0);
                 SetPlatforms(false, true);
-                //Debug.Log(originalPosition.ToString() + "  ->  " + destination.ToString());
                 while (Mathf.Abs(transform.position.x - destination.x) > 0.01 || Mathf.Abs(transform.position.y - halfHeight - destination.y) > 0.01)
                 {
                     transform.position = Navigate(destination);
                     yield return null;
                 }
                 marker.position = new Vector3(100, 0, 0);
-                //Debug.Log("Arrived");
                 if (speed != prevSpeed) ChangeDirection();
 
-                //r.gravityScale = 1;
                 c.enabled = true;
+
+                //Do Task:
+                switch (t.a)
+                {
+                    case Task.action.FURNACE:
+                        foreach (Item item in inventory)
+                        {
+                            if (item.name == "WOOD" && item.amount > 0)
+                            {
+                                item.amount--;
+                                t.calledMe.Interact();
+                            }
+                        }
+                        break;
+                    case Task.action.WOOD:
+                        bool found = false;
+                        foreach (Item item in inventory)
+                        {
+                            if (item.name == "WOOD")
+                            {
+                                item.amount++;
+                                found = true;
+                            }
+                        }
+                        if (!found)
+                            inventory.Add(new Item("WOOD"));
+                        break;
+                }
             }
             else
             {
