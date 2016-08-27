@@ -9,7 +9,7 @@ public class Mummy : MonoBehaviour
     public Transform icon = null;
     public Transform marker = null;
 
-    public float speed = 0.5f;
+    public float speed = 0.3f;
     public Platform platform = null;
     private Platform nextPlatform = null;
 
@@ -312,13 +312,18 @@ public class Mummy : MonoBehaviour
     private void UpdateInventoryDisplay()
     {
         KillInventory();
-        foreach(Item item in inventory)
+        int itemCount = 0;
+        int itemIndex = 0;
+        foreach (Item item in inventory) if (item.amount > 0) itemCount++;
+        foreach (Item item in inventory)
         {
             if (item.amount > 0)
             {
                 Transform t = (Transform)Instantiate(icon);
-                t.position = new Vector3(transform.position.x, transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2, transform.position.z);
+                t.GetComponent<ItemToIcon>().type = item.t;
+                t.position = new Vector3(transform.position.x + (itemIndex - itemCount / 2) * icon.GetComponent<SpriteRenderer>().bounds.size.x  / 2, transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2, transform.position.z);
                 t.SetParent(transform);
+                itemIndex++;
             }
         }
     }
