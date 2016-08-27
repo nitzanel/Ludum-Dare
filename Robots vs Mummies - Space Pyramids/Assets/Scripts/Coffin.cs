@@ -36,7 +36,6 @@ public class Coffin : Interactable
 
 	public override void Action(Mummy m)
 	{
-		Debug.Log ("GO TO THE DEAD");
 		m.AddTask (transform.position, Task.action.WAKE_THE_DEAD, this);
 	}
 
@@ -46,7 +45,7 @@ public class Coffin : Interactable
 		{
 			spriteRenderer.sprite = coffin_empty;
 			Instantiate (sleepy_mummy, new Vector3(transform.position.x,interactorTransform.position.y,interactorTransform.position.z), Quaternion.identity);
-			
+            timeLeft = startTime;
 		}
 	}
 
