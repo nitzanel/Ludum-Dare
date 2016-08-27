@@ -15,7 +15,7 @@ public class Task
 
 public class Mummy : MonoBehaviour
 {
-    public float speed = 0.1f;
+    public float speed = 0.5f;
     public Platform platform = null;
     private Platform nextPlatform = null;
 
@@ -31,7 +31,7 @@ public class Mummy : MonoBehaviour
 	
 	void Update ()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             AddTask(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, transform.position.z)));
         }
@@ -53,18 +53,19 @@ public class Mummy : MonoBehaviour
         {
             if (tasks.Count > 0)
             {
-                Rigidbody2D r = transform.GetComponent<Rigidbody2D>();
+                //Rigidbody2D r = transform.GetComponent<Rigidbody2D>();
                 BoxCollider2D c = transform.GetComponent<BoxCollider2D>();
-                r.gravityScale = 0;
+                //r.gravityScale = 0;
                 c.enabled = false;
 
                 float prevSpeed = speed;
                 speed = Mathf.Abs(speed);
+                float halfHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
                 Task t = tasks.Dequeue();
                 Vector3 destination = NormalizeDestination(t.destination);
                 SetPlatforms(false, true);
                 //Debug.Log(originalPosition.ToString() + "  ->  " + destination.ToString());
-                while (Mathf.Abs(transform.position.x - destination.x) > 0.05 || Mathf.Abs(transform.position.y - destination.y) > 0.25)
+                while (Mathf.Abs(transform.position.x - destination.x) > 0.01 || Mathf.Abs(transform.position.y - halfHeight - destination.y) > 0.01)
                 {
                     transform.position = Navigate(destination);
                     yield return null;
@@ -72,7 +73,7 @@ public class Mummy : MonoBehaviour
                 //Debug.Log("Arrived");
                 speed = prevSpeed;
 
-                r.gravityScale = 1;
+                //r.gravityScale = 1;
                 c.enabled = true;
             }
             else
@@ -86,7 +87,6 @@ public class Mummy : MonoBehaviour
     private Vector3 Navigate (Vector3 destination)
     {
         float halfHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
-        float halfWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x / 2;
         float platformHalfHeight = platform.transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
         if (Mathf.Abs(destination.y - (transform.position.y - halfHeight)) < 0.01) //on target platform
         {
@@ -97,7 +97,7 @@ public class Mummy : MonoBehaviour
             else
                 return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
         }
-        else if (destination.y > transform.position.y - halfHeight) //currently below target platform
+        else if (destination.y > transform.position.y - halfHeight) //currently below target platform - go up
         {
             //Debug.Log("currently below target platform");
             if (onLadder) //continue moving up the ladder
@@ -119,9 +119,9 @@ public class Mummy : MonoBehaviour
                     return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
             }
         }
-        else if (transform.position.y - halfHeight > destination.y) //currently above target platform
+        else if (transform.position.y - halfHeight > destination.y) //currently above target platform - go down
         {
-            Debug.Log("currently above target platform");
+            //Debug.Log("currently above target platform");
             if (onLadder) //continue moving down the ladder
             {
                 destination = new Vector3(nextPlatform.transform.position.x, nextPlatform.transform.position.y + platformHalfHeight, nextPlatform.transform.position.z);
@@ -234,7 +234,6 @@ public class Mummy : MonoBehaviour
             if (destination.y - o.transform.position.y < 0.5 && destination.y - o.transform.position.y >= 0)
             {
                 float xVal;
-                //Debug.Log((o.transform.position.y) + " - " + (transform.GetComponent<SpriteRenderer>().bounds.size.y / 2) + " = " + (o.transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2));
                 if (destination.x < o.transform.position.x - o.GetComponent<SpriteRenderer>().bounds.size.x / 2 + transform.GetComponent<SpriteRenderer>().bounds.size.x / 2)
                     xVal = o.transform.position.x - o.GetComponent<SpriteRenderer>().bounds.size.x / 2 + transform.GetComponent<SpriteRenderer>().bounds.size.x / 2;
                 else if (destination.x > o.transform.position.x + o.GetComponent<SpriteRenderer>().bounds.size.x / 2 - transform.GetComponent<SpriteRenderer>().bounds.size.x / 2)
@@ -242,9 +241,7 @@ public class Mummy : MonoBehaviour
                 else
                     xVal = destination.x;
 
-                //Debug.Log(xVal + "   " + (o.transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2) + "   " + destination.z);
-                Debug.Log(o.transform.position);
-                return new Vector3(xVal, o.transform.position.y/* + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2*/ + o.GetComponent<SpriteRenderer>().bounds.size.y / 2, destination.z);
+                return new Vector3(xVal, o.transform.position.y + o.GetComponent<SpriteRenderer>().bounds.size.y / 2, destination.z);
             }
         }
         return new Vector3(0, 0, 0);
