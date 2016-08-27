@@ -45,6 +45,7 @@ public class Coffin : Interactable
 		{
 			spriteRenderer.sprite = coffin_empty;
 			Instantiate (sleepy_mummy, new Vector3(transform.position.x,interactorTransform.position.y,interactorTransform.position.z), Quaternion.identity);
+            transform.GetComponent<AudioSource>().Play();
             timeLeft = startTime;
 		}
 	}
