@@ -57,6 +57,7 @@ public class Mummy : MonoBehaviour
                 transform.GetComponent<SpriteRenderer>().color = Color.yellow;
             else
                 transform.GetComponent<SpriteRenderer>().color = Color.white;
+            transform.GetComponent<AudioSource>().Play();
         }
     }
 
