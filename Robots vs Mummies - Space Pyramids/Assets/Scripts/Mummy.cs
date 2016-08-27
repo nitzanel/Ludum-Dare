@@ -62,6 +62,7 @@ public class Mummy : MonoBehaviour
                 speed = Mathf.Abs(speed);
                 Task t = tasks.Dequeue();
                 Vector3 destination = NormalizeDestination(t.destination);
+                SetPlatforms(false, true);
                 //Debug.Log(originalPosition.ToString() + "  ->  " + destination.ToString());
                 while (Mathf.Abs(transform.position.x - destination.x) > 0.05 || Mathf.Abs(transform.position.y - destination.y) > 0.25)
                 {
@@ -84,54 +85,10 @@ public class Mummy : MonoBehaviour
 
     private Vector3 Navigate (Vector3 destination)
     {
-        //Debug.Log(destination.y + "   " + transform.position.y + "  " + (destination.y - transform.position.y));
         float halfHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
         float halfWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x / 2;
-        if (destination.y - transform.position.y + halfHeight > 0.1) //currently below target platform
-        {
-            //Debug.Log("currently below target platform");
-            if (onLadder) //continue moving up the ladder
-            {
-                destination = nextPlatform.transform.position;
-                if (Mathf.Abs(transform.position.y + halfHeight + speed * Time.deltaTime - destination.y) < 0.05)
-                    onLadder = false;
-                return new Vector3(transform.position.x, transform.position.y + speed * Time.deltaTime, transform.position.z);
-            }
-            else //move to current ladder
-            {
-                SetPlatforms(true, false);
-                float dif = platform.ladderUp.position.x - transform.position.x + halfWidth;
-                if (Mathf.Abs(dif) < 0.05)
-                    onLadder = true;
-                else if (dif > 0)
-                    return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
-                else
-                    return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
-            }
-        }
-        else if (destination.y - transform.position.y - halfHeight < -0.1) //currently above target platform
-        {
-            //Debug.Log("currently above target platform");
-            if (onLadder) //continue moving down the ladder
-            {
-                destination = nextPlatform.transform.position;
-                if (Mathf.Abs(transform.position.y + halfHeight - speed * Time.deltaTime - destination.y) < 0.05)
-                    onLadder = false;
-                return new Vector3(transform.position.x, transform.position.y - speed * Time.deltaTime, transform.position.z);
-            }
-            else //move to current ladder
-            {
-                SetPlatforms(false, false);
-                float dif = platform.ladderDown.position.x - transform.position.x + halfWidth;
-                if (Mathf.Abs(dif) < 0.05)
-                    onLadder = true;
-                else if (dif > 0)
-                    return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
-                else
-                    return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
-            }
-        }
-        else //on target platform
+        float platformHalfHeight = platform.transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
+        if (Mathf.Abs(destination.y - (transform.position.y - halfHeight)) < 0.01) //on target platform
         {
             //Debug.Log("on target platform");
             SetPlatforms(false, true);
@@ -139,6 +96,50 @@ public class Mummy : MonoBehaviour
                 return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
             else
                 return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+        }
+        else if (destination.y > transform.position.y - halfHeight) //currently below target platform
+        {
+            //Debug.Log("currently below target platform");
+            if (onLadder) //continue moving up the ladder
+            {
+                destination = new Vector3(nextPlatform.transform.position.x, nextPlatform.transform.position.y + platformHalfHeight, nextPlatform.transform.position.z);
+                if (destination.y < transform.position.y - halfHeight + speed * Time.deltaTime)
+                    onLadder = false;
+                return new Vector3(transform.position.x, transform.position.y + speed * Time.deltaTime, transform.position.z);
+            }
+            else //move to current ladder
+            {
+                SetPlatforms(true, false);
+                float dif = platform.ladderUp.position.x - transform.position.x;
+                if (Mathf.Abs(dif) < 0.05)
+                    onLadder = true;
+                else if (dif > 0)
+                    return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+                else
+                    return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+            }
+        }
+        else if (transform.position.y - halfHeight > destination.y) //currently above target platform
+        {
+            Debug.Log("currently above target platform");
+            if (onLadder) //continue moving down the ladder
+            {
+                destination = new Vector3(nextPlatform.transform.position.x, nextPlatform.transform.position.y + platformHalfHeight, nextPlatform.transform.position.z);
+                if (transform.position.y - halfHeight - speed * Time.deltaTime < destination.y)
+                    onLadder = false;
+                return new Vector3(transform.position.x, transform.position.y - speed * Time.deltaTime, transform.position.z);
+            }
+            else //move to current ladder
+            {
+                SetPlatforms(false, false);
+                float dif = platform.ladderDown.position.x - transform.position.x;
+                if (Mathf.Abs(dif) < 0.05)
+                    onLadder = true;
+                else if (dif > 0)
+                    return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+                else
+                    return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+            }
         }
         //Debug.Log("end");
         return transform.position;
@@ -242,7 +243,8 @@ public class Mummy : MonoBehaviour
                     xVal = destination.x;
 
                 //Debug.Log(xVal + "   " + (o.transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2) + "   " + destination.z);
-                return new Vector3(xVal, o.transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2 + o.GetComponent<SpriteRenderer>().bounds.size.y / 2, destination.z);
+                Debug.Log(o.transform.position);
+                return new Vector3(xVal, o.transform.position.y/* + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2*/ + o.GetComponent<SpriteRenderer>().bounds.size.y / 2, destination.z);
             }
         }
         return new Vector3(0, 0, 0);

@@ -1,0 +1,210 @@
+fileFormatVersion: 2
+guid: 9e9b0a6f3b56fdb42a1ee016c235a6d2
+timeCreated: 1472288182
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: mummy_sheet_0
+    21300002: mummy_sheet_1
+    21300004: mummy_sheet_2
+    21300006: mummy_sheet_3
+    21300008: mummy_sheet_4
+    21300010: mummy_sheet_5
+    21300012: mummy_sheet_6
+    21300014: mummy_sheet_7
+    21300016: mummy_sheet_8
+    21300018: mummy_sheet_9
+    21300020: mummy_sheet_10
+    21300022: mummy_sheet_11
+    21300024: mummy_sheet_12
+    21300026: mummy_sheet_13
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: mummy_sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 163
+        width: 28
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_1
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 163
+        width: 28
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_2
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 163
+        width: 28
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_3
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 163
+        width: 28
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_5
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_6
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_7
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_8
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_9
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_10
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_11
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_12
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: mummy_sheet_13
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 122
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
