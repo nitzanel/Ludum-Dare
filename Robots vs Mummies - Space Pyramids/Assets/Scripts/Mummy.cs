@@ -40,6 +40,7 @@ public class Mummy : MonoBehaviour
     public void ChangeDirection()
     {
         speed = -speed;
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     public void AddTask(Vector3 destination)
@@ -59,7 +60,7 @@ public class Mummy : MonoBehaviour
                 c.enabled = false;
 
                 float prevSpeed = speed;
-                speed = Mathf.Abs(speed);
+                if (speed < 0) ChangeDirection();
                 float halfHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
                 Task t = tasks.Dequeue();
                 Vector3 destination = NormalizeDestination(t.destination);
@@ -71,7 +72,7 @@ public class Mummy : MonoBehaviour
                     yield return null;
                 }
                 //Debug.Log("Arrived");
-                speed = prevSpeed;
+                if (speed != prevSpeed) ChangeDirection();
 
                 //r.gravityScale = 1;
                 c.enabled = true;
@@ -93,9 +94,15 @@ public class Mummy : MonoBehaviour
             //Debug.Log("on target platform");
             SetPlatforms(false, true);
             if (destination.x > transform.position.x)
+            {
+                if (speed < 0) ChangeDirection();
                 return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+            }
             else
-                return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+            {
+                if (speed > 0) ChangeDirection();
+                return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+            }
         }
         else if (destination.y > transform.position.y - halfHeight) //currently below target platform - go up
         {
@@ -103,6 +110,7 @@ public class Mummy : MonoBehaviour
             if (onLadder) //continue moving up the ladder
             {
                 destination = new Vector3(nextPlatform.transform.position.x, nextPlatform.transform.position.y + platformHalfHeight, nextPlatform.transform.position.z);
+                if (speed < 0) ChangeDirection();
                 if (destination.y < transform.position.y - halfHeight + speed * Time.deltaTime)
                     onLadder = false;
                 return new Vector3(transform.position.x, transform.position.y + speed * Time.deltaTime, transform.position.z);
@@ -114,9 +122,15 @@ public class Mummy : MonoBehaviour
                 if (Mathf.Abs(dif) < 0.05)
                     onLadder = true;
                 else if (dif > 0)
+                {
+                    if (speed < 0) ChangeDirection();
                     return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+                }
                 else
-                    return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+                {
+                    if (speed > 0) ChangeDirection();
+                    return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+                }
             }
         }
         else if (transform.position.y - halfHeight > destination.y) //currently above target platform - go down
@@ -125,9 +139,10 @@ public class Mummy : MonoBehaviour
             if (onLadder) //continue moving down the ladder
             {
                 destination = new Vector3(nextPlatform.transform.position.x, nextPlatform.transform.position.y + platformHalfHeight, nextPlatform.transform.position.z);
-                if (transform.position.y - halfHeight - speed * Time.deltaTime < destination.y)
+                if (speed > 0) ChangeDirection();
+                if (transform.position.y - halfHeight + speed * Time.deltaTime < destination.y)
                     onLadder = false;
-                return new Vector3(transform.position.x, transform.position.y - speed * Time.deltaTime, transform.position.z);
+                return new Vector3(transform.position.x, transform.position.y + speed * Time.deltaTime, transform.position.z);
             }
             else //move to current ladder
             {
@@ -136,9 +151,15 @@ public class Mummy : MonoBehaviour
                 if (Mathf.Abs(dif) < 0.05)
                     onLadder = true;
                 else if (dif > 0)
+                {
+                    if (speed < 0) ChangeDirection();
                     return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+                }
                 else
-                    return new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+                {
+                    if (speed > 0) ChangeDirection();
+                    return new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
+                }
             }
         }
         //Debug.Log("end");
