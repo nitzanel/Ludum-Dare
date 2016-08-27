@@ -13,7 +13,7 @@ public class Mummy : MonoBehaviour
     private Platform nextPlatform = null;
 
     private Queue<Task> tasks;
-    private List<Item> inventory;
+    public List<Item> inventory;
     private bool onLadder = false;
 
 	void Start ()
