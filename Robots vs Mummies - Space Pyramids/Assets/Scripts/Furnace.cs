@@ -20,7 +20,7 @@ public class Furnace : Interactable
         if (timeLeft <= 0)
         {
             timeLeft = 0;
-            Debug.Log("GAME OVER");
+            Application.LoadLevel("GameOver");
         }
         bar.localScale = new Vector3(bar.localScale.x,  timeLeft / startTime, bar.localScale.z);
     }
