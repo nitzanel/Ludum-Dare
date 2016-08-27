@@ -6,6 +6,7 @@ public class Mummy : MonoBehaviour
 {
     public bool isSelected = false;
 
+    public Transform icon = null;
     public Transform marker = null;
 
     public float speed = 0.5f;
@@ -21,6 +22,7 @@ public class Mummy : MonoBehaviour
         tasks = new Queue<Task>();
         inventory = new List<Item>();
 		marker = GameObject.Find ("Marker").transform;
+
         StartCoroutine("TaskManager");
 	}
 	
@@ -89,7 +91,7 @@ public class Mummy : MonoBehaviour
                     case Task.action.FURNACE:
                         foreach (Item item in inventory)
                         {
-                            if (item.name == "WOOD" && item.amount > 0)
+                            if (item.t == Item.type.WOOD && item.amount > 0)
                             {
                                 item.amount--;
 								t.calledMe.Interact();
@@ -100,20 +102,21 @@ public class Mummy : MonoBehaviour
                         bool found = false;
                         foreach (Item item in inventory)
                         {
-                            if (item.name == "WOOD")
+                            if (item.t == Item.type.WOOD)
                             {
                                 item.amount++;
                                 found = true;
                             }
                         }
                         if (!found)
-                            inventory.Add(new Item("WOOD"));
+                            inventory.Add(new Item(Item.type.WOOD));
                         break;
 				case Task.action.WAKE_THE_DEAD:
 					// Pass the transform of the mummy to the function.
 					t.calledMe.Interact (transform);
 					break;
                 }
+                UpdateInventoryDisplay();
             }
             else
             {
@@ -304,5 +307,29 @@ public class Mummy : MonoBehaviour
             }
         }
         return new Vector3(0, 0, 0);
+    }
+
+    private void UpdateInventoryDisplay()
+    {
+        KillInventory();
+        foreach(Item item in inventory)
+        {
+            if (item.amount > 0)
+            {
+                Transform t = (Transform)Instantiate(icon);
+                t.position = new Vector3(transform.position.x, transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2, transform.position.z);
+                t.SetParent(transform);
+            }
+        }
+    }
+
+    private void KillInventory()
+    {
+        while (transform.childCount > 0)
+        {
+            Transform t = transform.GetChild(0);
+            t.transform.SetParent(null);
+            Destroy(t.gameObject);
+        }
     }
 }

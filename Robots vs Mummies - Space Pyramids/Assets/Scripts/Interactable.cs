@@ -40,12 +40,13 @@ public class Interactable : MonoBehaviour
 
 public class Item
 {
-    public string name;
+    public enum type { WOOD };
     public int amount;
+    public type t;
 
-    public Item(string Name, int Amount = 1)
+    public Item(type T, int Amount = 1)
     {
-        name = Name;
+        t = T;
         amount = Amount;
     }
 }

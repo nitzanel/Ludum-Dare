@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// TASK TASK TASK
-/// </summary>
-[System.Serializable]
 public class Task
 {
 	public Vector3 destination;
@@ -19,6 +15,3 @@ public class Task
 		calledMe = CalledMe;
 	}
 }
-/// <summary>
-/// END END END
-/// </summary>
