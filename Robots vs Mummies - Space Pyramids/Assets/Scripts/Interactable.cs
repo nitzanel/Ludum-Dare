@@ -32,7 +32,7 @@ public class Interactable : MonoBehaviour
 
     }
 
-    public virtual void Interact()
+	public virtual void Interact(Transform interactorTransform = null)
     {
         
     }

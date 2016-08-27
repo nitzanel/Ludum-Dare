@@ -30,7 +30,7 @@ public class Furnace : Interactable
         m.AddTask(transform.position, Task.action.FURNACE, this);
     }
 
-    public override void Interact()
+	public override void Interact(Transform interactorTransform = null)
     {
         timeLeft = startTime;
     }

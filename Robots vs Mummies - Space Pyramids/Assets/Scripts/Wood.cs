@@ -8,8 +8,4 @@ public class Wood : Interactable
         m.AddTask(transform.position, Task.action.WOOD);
     }
 
-    public override void Interact()
-    {
-        
-    }
 }

@@ -20,7 +20,7 @@ public class Mummy : MonoBehaviour
     {
         tasks = new Queue<Task>();
         inventory = new List<Item>();
-
+		marker = GameObject.Find ("Marker").transform;
         StartCoroutine("TaskManager");
 	}
 	
@@ -92,7 +92,7 @@ public class Mummy : MonoBehaviour
                             if (item.name == "WOOD" && item.amount > 0)
                             {
                                 item.amount--;
-                                t.calledMe.Interact();
+								t.calledMe.Interact();
                             }
                         }
                         break;
@@ -109,6 +109,10 @@ public class Mummy : MonoBehaviour
                         if (!found)
                             inventory.Add(new Item("WOOD"));
                         break;
+				case Task.action.WAKE_THE_DEAD:
+					// Pass the transform of the mummy to the function.
+					t.calledMe.Interact (transform);
+					break;
                 }
             }
             else
