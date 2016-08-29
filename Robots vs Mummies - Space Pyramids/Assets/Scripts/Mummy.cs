@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Mummy : MonoBehaviour
 {
+	
     public bool isSelected = false;
 
     public Transform icon = null;
@@ -30,41 +31,77 @@ public class Mummy : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && isSelected)
         {
+			// Adds a task to the mummy at the world position clicked.
             AddTask(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, transform.position.z)));
         }
+
+
+	}
+
+	/* This function is called by the PlayerManager automaticly.
+	 * Input:
+	 * bool selected - true if the mummy was just selected and was not selected before.
+	 * false if the mummy was just selected but was selected before (cancel selection)
+	*/
+	public void SelectMummy(bool selected)
+	{
+		isSelected = selected;
+		if (selected) 
+		{
+			transform.GetComponent<SpriteRenderer> ().color = Color.yellow;
+			transform.GetComponent<AudioSource> ().Play ();
+		}
+		else transform.GetComponent<SpriteRenderer>().color = Color.white;
 	}
 
     public void OnMouseDown()
     {
-        if (Input.GetKey("mouse 0"))
-        {
-            isSelected = !isSelected;
-            if (isSelected)
-                transform.GetComponent<SpriteRenderer>().color = Color.yellow;
-            else
-                transform.GetComponent<SpriteRenderer>().color = Color.white;
-            transform.GetComponent<AudioSource>().Play();
-        }
+		// it is not required to check for the mouse button,
+		//because the function only get called when the mouse button clicked was mouse 0.
+        //if (Input.GetKey("mouse 0"))
+        //{
+		// calls the PlayerManager to select or deselect mummies.
+		PlayerManager.SetCurrentlySelected(this);        
+    	//    }
     }
 
+	/* This function Changes the direction of the mummy.
+	 * When the mummy gets to close to the edge of a platform, the function will be called and the mummy's
+	 * movement direction will be inverted.
+	 * The function will also cause the mummy's sprite to turn to the other side.
+	*/
     public void ChangeDirection()
     {
         speed = -speed;
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
+	/* This funtion adds a task to the mummy.
+	 * Input:
+	 * Vector3 destination - the position of the mouse button where the user clicked.
+	 * Task.action action - the type of action the mummy will perform. defaults to Task.action.WALK.
+	 * Interactable calledMe - the Interactable item/unit/whatever (that inherits from Interactable)
+	 * that is the object of the task. example - Furnace. defaults no null. 
+	 * This function will be called by Interactable objects (usually).
+	*/
     public void AddTask(Vector3 destination, Task.action action = Task.action.WALK, Interactable calledMe = null)
     {
         tasks.Enqueue(new Task(destination, action, calledMe));
     }
 
+
+	/* This function manages the tasks the mummy has to perform.
+	 * The TaskManager runs on another thread, while doing the tasks.
+	 * The TaskManager will keep running until it is out of tasks.
+	 * The TaskManager call the navigation function by itself.
+	*/
     IEnumerator TaskManager()
     {
         while (true)
         {
             if (tasks.Count > 0)
             {
-                //Move to task:
+				//Move to task:
                 BoxCollider2D c = transform.GetComponent<BoxCollider2D>();
                 c.enabled = false;
 
@@ -116,6 +153,7 @@ public class Mummy : MonoBehaviour
 					t.calledMe.Interact (transform);
 					break;
                 }
+				// Update the mummy's Inventory display.
                 UpdateInventoryDisplay();
             }
             else
@@ -125,7 +163,11 @@ public class Mummy : MonoBehaviour
             yield return null;
         }
     }
-
+	/* This function is the pathfinding algorithem the mummy uses to move around the pyramid.
+	 * Input:
+	 * Vector3 destination - The place where the mummy need to reach. 
+	 * The Vector must be normalized with the function NormalizeDesitnation.
+	*/
     private Vector3 Navigate (Vector3 destination)
     {
         float halfHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
@@ -248,6 +290,13 @@ public class Mummy : MonoBehaviour
     }
     */
 
+	/*
+	* This function finds what platform the mummy should move to next.
+	* Input:
+	* bool up - true: the mummy should go up. false: the mummy should go down.
+	* bool ignore: true: the mummy reached the platform it needed, and should not go up or down anymore.
+	* false: The mummy hasn't reached its destination yet.
+	*/
     private void SetPlatforms(bool up, bool ignore)
     {
         onLadder = false;
@@ -287,7 +336,13 @@ public class Mummy : MonoBehaviour
             }
         }
     }
-
+	/* This function returns a normalized destination vector.
+	 * Input:
+	 * Vector3 destination - The destination is the place the mummy need to go before normalization.
+	 * Output:
+	 * Normalized destination Vector3.
+	 * The function is called automaticly by Navigate.
+	*/
     private Vector3 NormalizeDestination(Vector3 destination)
     {
         GameObject[] objects = GameObject.FindGameObjectsWithTag("Platform");
@@ -309,6 +364,10 @@ public class Mummy : MonoBehaviour
         return new Vector3(0, 0, 0);
     }
 
+	/*
+	 * This function will update the inventory display icon(s) (soon)
+	 * The function is called automaticly by the TaskManager function.
+	*/
     private void UpdateInventoryDisplay()
     {
         KillInventory();
@@ -328,6 +387,10 @@ public class Mummy : MonoBehaviour
         }
     }
 
+	/* This function will destroy the mummy's children.
+	 * 
+	 * 
+ 	*/
     private void KillInventory()
     {
         while (transform.childCount > 0)
