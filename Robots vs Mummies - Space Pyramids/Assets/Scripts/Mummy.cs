@@ -17,7 +17,8 @@ public class Mummy : MonoBehaviour
     private Queue<Task> tasks;
     public List<Item> inventory;
     private bool onLadder = false;
-
+	private float taskCooldown = 0.1f;
+	private float currentCooldown = 0.0f;
 	void Start ()
     {
         tasks = new Queue<Task>();
@@ -29,11 +30,16 @@ public class Mummy : MonoBehaviour
 	
 	void Update ()
     {
-        if (Input.GetMouseButtonDown(0) && isSelected)
-        {
-			// Adds a task to the mummy at the world position clicked.
-            AddTask(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, transform.position.z)));
-        }
+		currentCooldown -= Time.deltaTime;
+		if (Input.GetMouseButtonDown (0) && isSelected) 
+		{
+			if (currentCooldown <= 0.0f)
+			{
+				// Adds a task to the mummy at the world position clicked.
+				AddTask (Camera.main.ScreenToWorldPoint (new Vector3 (Input.mousePosition.x, Input.mousePosition.y, transform.position.z)));
+				currentCooldown = taskCooldown;
+			}
+		}
 
 
 	}
