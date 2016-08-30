@@ -2,6 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+/// <summary>
+/// This class manages the rolling star background
+/// </summary>
+
 public class BackgroundManager : MonoBehaviour
 {
     public float speed = 0.25f;

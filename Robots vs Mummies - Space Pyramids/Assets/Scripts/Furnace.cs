@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Furnace.
+/// </summary>
 public class Furnace : Interactable
 {
     public float startTime = 60f;
@@ -34,30 +37,5 @@ public class Furnace : Interactable
     {
         timeLeft = startTime;
     }
-
-    /*
-    public void OnMouseDown()
-    {
-        if (Input.GetKey("mouse 0"))
-        {
-            GameObject[] mummies = GameObject.FindGameObjectsWithTag("Mummy");
-            foreach (GameObject mummy in mummies)
-            {
-                Mummy m = mummy.GetComponent<Mummy>();
-                if (m.isSelected)
-                {
-                    m.AddTask(transform.position);
-                    if (m.marker)
-                        StartCoroutine("WaitAndMove", m.marker);
-                }
-            }
-        }
-    }
-
-    IEnumerator WaitAndMove(Transform marker)
-    {
-        yield return new WaitForEndOfFrame();
-        marker.position = new Vector3(transform.position.x, transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2, 0);
-    }
-     * */
+		
 }

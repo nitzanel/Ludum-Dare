@@ -387,7 +387,7 @@ public class Mummy : MonoBehaviour
         }
     }
 
-	/* This function will destroy the mummy's children.
+	/* This function will destroy the mummy's inventroy.
 	 * 
 	 * 
  	*/

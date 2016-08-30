@@ -16,7 +16,7 @@ public class EnemyManager : MonoBehaviour
     public float movePyramidBy = 0.2f;
 
     private float time = 0;
-    private bool didSpawnNada = false;
+    private bool didSpawnNasa = false;
 
     private Transform pyramid = null;
 
@@ -31,15 +31,22 @@ public class EnemyManager : MonoBehaviour
 	void Update ()
     {
         time += Time.deltaTime;
-        if (time > nasaDaployTime && !didSpawnNada)
+        if (time > nasaDaployTime && !didSpawnNasa)
         {
             //pyramid.position = new Vector3(pyramid.position.x + movePyramidBy, pyramid.position.y, pyramid.position.z);
             StartCoroutine("MovePyramid", new Vector3(pyramid.position.x + movePyramidBy, pyramid.position.y, pyramid.position.z));
             Instantiate(nasa, new Vector3(pyramid.position.x - movePyramidBy - 1.2f, pyramid.position.y - 2, pyramid.position.z), Quaternion.identity);
-            didSpawnNada = true;
+            didSpawnNasa = true;
         }
 	}
 
+
+	// Nitzan's comment: why do we need this function?
+	/*
+	 * This function moves the player's pyramid.
+	 * Input:
+	 * Vector3 destination - the new position of the player's pyramid.
+	*/
     IEnumerator MovePyramid (Vector3 destination)
     {
         while (Vector3.Distance(transform.position, destination) > 0.05f)

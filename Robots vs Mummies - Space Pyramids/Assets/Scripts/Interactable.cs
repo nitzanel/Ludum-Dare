@@ -1,10 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Interactable.
+/// </summary>
 public class Interactable : MonoBehaviour
 {
+	/// <summary>
+	/// Raises the mouse down event.
+	/// </summary>
     public void OnMouseDown()
     {
+		// I think this check is obsolute.
         if (Input.GetKey("mouse 0"))
         {
             GameObject[] mummies = GameObject.FindGameObjectsWithTag("Mummy");
@@ -20,33 +27,33 @@ public class Interactable : MonoBehaviour
             }
         }
     }
-
+	/*
+	 * Input:
+	 * Transform marker - The marker transform. It will be given a new position.
+	*/ 
     IEnumerator WaitAndMove(Transform marker)
     {
         yield return new WaitForEndOfFrame();
         marker.position = new Vector3(transform.position.x, transform.position.y + transform.GetComponent<SpriteRenderer>().bounds.size.y / 2, 0);
     }
 
+	/*
+	 * Every class that inherits from Iteractable must have an Action function.
+	 * Input:
+	 * Mummy m - The mummy that performs the Action.
+	*/
     public virtual void Action(Mummy m)
     {
 
     }
-
+	/* 
+	 * Every class that inherits from Iteractable must have an Interact function.
+	 * Input:
+	 * Tranform interactorTransform - The Transform of the mummy interacting with the Interactable.
+	*/
 	public virtual void Interact(Transform interactorTransform = null)
     {
         
     }
 }
 
-public class Item
-{
-    public enum type { WOOD };
-    public int amount;
-    public type t;
-
-    public Item(type T, int Amount = 1)
-    {
-        t = T;
-        amount = Amount;
-    }
-}

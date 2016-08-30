@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+/// <summary>
+/// Item to icon.
+/// </summary>
 public class ItemToIcon : MonoBehaviour
 {
     public Item.type type = Item.type.WOOD;
