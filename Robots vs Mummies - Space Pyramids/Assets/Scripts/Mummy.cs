@@ -31,7 +31,8 @@ public class Mummy : MonoBehaviour
 	void Update ()
     {
 		currentCooldown -= Time.deltaTime;
-		if (Input.GetMouseButtonDown (0) && isSelected) 
+		// chnaged from left click to right click.
+		if (Input.GetMouseButtonDown (1) && isSelected) 
 		{
 			if (currentCooldown <= 0.0f)
 			{
